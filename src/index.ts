@@ -1,5 +1,7 @@
-import fs from 'fs';
+
 import chalk from 'chalk';
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+import { promises as fs } from 'fs';
 
 /**
  * Descripcion: Enumerado de rarezas de cartas
@@ -105,37 +107,33 @@ type Data = string;
 export function addCardToCollection(user: string,  card: Card): Promise<string> {
     return new Promise<string>((resolve, reject) => {
         const filePath = `./collections/${user}/${card.id}.json`;
-        fs.access(filePath, fs.constants.F_OK, (err) => {
-            if (!err) {
+        fs.access(filePath, fs.constants.F_OK).then(() => {
                 // La carta ya existe, emitir un mensaje de error
                 reject("La carta ya existe en la colección.");
-            } else {
+            })
+            .catch(() => {
                 // La carta no existe, proceder a escribir el archivo JSON
-                fs.writeFile(filePath, JSON.stringify(card), (err) => {
-                    if (err) {
+                fs.writeFile(filePath, JSON.stringify(card)).catch(() => {
                         //crear la carpeta si no existe
-                        fs.mkdir(`./collections/${user}`, { recursive: true }, (err) => {
-                            if (err) {
+                        fs.mkdir(`./collections/${user}`, { recursive: true }).catch(() => {
+                   
                                 reject('Error al crear la carpeta del usuario'); // Error al crear la carpeta del usuario
-                            } else {
-                                fs.writeFile(filePath, JSON.stringify(card), (err) => {
-                                    if (err) {
+                            })
+                            .then(() => {
+                                fs.writeFile(filePath, JSON.stringify(card)).catch(() => {
+                                    
                                         reject('Error al cargar la carta'); // Error al añadir la carta
-                                    } else {
+                                    })
+                                    .then(() => {
                                         resolve('Éxito al cargar la carta'); // Éxito al añadir la carta
-                                    }
+                                    });
                                 });
-                            }
-                        });  
-                    } else {
+                            }).then(() => {
                         resolve('Éxito al cargar la carta'); // Éxito al añadir la carta
-                    }
+                    });
                 });
-            }
-        });
-    });
-}
-
+            });
+        }
 
 
 //DELETE CARD
@@ -148,22 +146,22 @@ export function addCardToCollection(user: string,  card: Card): Promise<string> 
 export function deleteCardToCollection(user: string,  card: Card): Promise<string> {
     return new Promise<string>((resolve, reject) => {
         const filePath = `./collections/${user}/${card.id}.json`;
-        fs.access(filePath, fs.constants.F_OK, (err) => {
-            if (!err) {
+        fs.access(filePath, fs.constants.F_OK).then(() => {
                 // si la carta ya existe a elimina el archivo
-                fs.unlink(filePath, (err) => {
-                    if (err) {
+                fs.unlink(filePath).catch(() => {
+        
                         reject('Error al eliminar la carta'); // error al eliminar el archivo
-                    } else {
+                    })
+                    .then(() => { {
                         resolve('Éxito al eliminar la carta'); // éxito al eliminar la carta
                     }
                 });
             // si la carta no existe, emitir un mensaje de error
-            } else {
+            })
+            .catch(() => {
                 reject("La carta no existe en la colección.");
-            }
+            });
         });
-    });
 }
 
 
@@ -172,35 +170,39 @@ export function deleteCardToCollection(user: string,  card: Card): Promise<strin
  * Descripcion: Modifica la carta de la collection de forma asyncrona
  * @param user usuario propietario de la carta
  * @param card carta a manipular
- * @return promise que devuelve un sring segun ha sdio devuelto con un resolve o un reject
+ * @return promise que devuelve un sring segun ha sdio devuelto con un resolve o
  */
+
+
 export function modifyCardToCollection(user: string,  card: Card): Promise<string> {
     return new Promise<string>((resolve, reject) => {
         const filePath = `./collections/${user}/${card.id}.json`;
-        fs.access(filePath, fs.constants.F_OK, (err) => {
-            if (!err) {
+        fs.access(filePath, fs.constants.F_OK ).then(() => {
+
                 // si en el json de la carta se puede escribir 
-                fs.writeFile(filePath, (JSON.stringify(card)), (err) => {
-                    //si hay error de escritura en el archivo, notificarlo
-                    if (err) {
-    
-                        reject('Error al modificar la carta'); // error al eliminar el archivo
-                    } else {
-                        console.log('La carta se ha modificado a') ;
-                        console.log(card);
-                        resolve('Éxito al modificar la carta de ' + user ); // éxito al eliminar la carta
-                    } 
+                fs.writeFile(filePath, (JSON.stringify(card)))
+                .then(() => {
+                    resolve('Éxito al modificar la carta'); // éxito al eliminar la carta
+                })
+                .catch(() => {
+                reject('Fallo al modificar la carta'); // éxito al eliminar la carta
                 });
-            } else {
+
+
+            })   
+            .catch(() => {
                 // en cambio si el archivo no se puede accedera, emitir un mensaje de error
                 reject("La carta no existe en la colección de " + user + ".");
-            }
+            });
         });
-    });
 }
 
 
 
+addCardToCollection("edusegre", new Card(777, 'White Panther', 70, Color.Black, LineType.Tierra, Rarity.Rare, 'Tap to delete the enemy creature.', 100 ))
+.catch((message) => {
+    console.log(chalk.green(message)); // Mensaje de éxito
+});
 
 
 // addCardToCollection("edusegre", new Card(778, 'Black Lotus', 69, Color.Black, LineType.Tierra, Rarity.Rare, 'Tap to delete the enemy creature.', 100 ))
@@ -229,6 +231,3 @@ export function modifyCardToCollection(user: string,  card: Card): Promise<strin
 //     .catch((error) => {
 //         console.error(chalk.red(error)); // Mensaje de error
 //     });
-
-
-

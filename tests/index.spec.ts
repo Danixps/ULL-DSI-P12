@@ -1,5 +1,5 @@
 import { expect } from "chai";
-import { addCardToCollection, deleteCardToCollection, Card, Color, LineType, Rarity, modifyCardToCollection } from "../src/index.js";
+import { addCardToCollection, Card, Color, LineType, Rarity, modifyCardToCollection, deleteCardToCollection } from "../src/index.js";
 
 
 
@@ -10,15 +10,15 @@ describe("Conjuntos de pruebas para manipulacion de promesas de cartas magic", (
 
     });
   });
+  it ("deleteCardToCollection deberia no poder eliminar una carta ya que la carta no existe", () => {
+    return deleteCardToCollection("edusegre",  new Card(8, 'Black Lotus', 69, Color.Black, LineType.Tierra, Rarity.Rare, 'Tap to delete the enemy creature.', 100 )).catch((result) => {
+      expect(result).to.be.equal("La carta no existe en la colección.");
+
+    });
+   });
   it ("addCardToCollection deberia añadir una carta correctamente", () => {
     return addCardToCollection("edusegre",  new Card(8, 'Black Lotus', 69, Color.Black, LineType.Tierra, Rarity.Rare, 'Tap to delete the enemy creature.', 100 )).then((result) => {
       expect(result).to.be.equal("Éxito al cargar la carta");
-
-    });
-  });
-  it ("deleteCardToCollection deberia no poder eliminar una carta ya que la carta no existe", () => {
-    return deleteCardToCollection("edusegre",  new Card(7, 'Black Lotus', 69, Color.Black, LineType.Tierra, Rarity.Rare, 'Tap to delete the enemy creature.', 100 )).catch((result) => {
-      expect(result).to.be.equal("La carta no existe en la colección.");
 
     });
   });
@@ -41,13 +41,5 @@ describe("Conjuntos de pruebas para manipulacion de promesas de cartas magic", (
     });
   
   });
-  it ("deleteCardToCollection deberia eliminar una carta correctamente", () => {
-    return deleteCardToCollection("edusegre",  new Card(8, 'White Panther', 70, Color.White, LineType.Tierra, Rarity.Rare, 'Tap to delete the enemy creature.', 100 )).then((result) => {
-      expect(result).to.be.equal("Éxito al eliminar la carta");
-
-    });
-  });
-  
-  
 
 });

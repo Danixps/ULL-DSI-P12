@@ -99,7 +99,7 @@ type Data = string;
  * Descripcion: Añade la carta de la collection de forma asyncrona
  * @param user usuario propietario de la carta
  * @param card carta a manipular
- * @callback manejador donde tengo como argumento data y error donde los ire manipulando dependiendo de la situacion
+ * @return promise devuelve una promesa que será un string dpendiendo si ha sido devuleta con resolve o reject
  */
 
 export function addCardToCollection(user: string,  card: Card): Promise<string> {
@@ -143,7 +143,7 @@ export function addCardToCollection(user: string,  card: Card): Promise<string> 
  * Descripcion: Elimia la carta de la collection de forma asyncrona
  * @param user usuario propietario de la carta
  * @param card carta a manipular
- * @callback manejador donde tengo como argumento data y error donde los ire manipulando dependiendo de la situacion
+ * @return Promise donde manejo los datos segun son han sido devueltos como reject o resolve
  */
 export function deleteCardToCollection(user: string,  card: Card): Promise<string> {
     return new Promise<string>((resolve, reject) => {
@@ -172,7 +172,7 @@ export function deleteCardToCollection(user: string,  card: Card): Promise<strin
  * Descripcion: Modifica la carta de la collection de forma asyncrona
  * @param user usuario propietario de la carta
  * @param card carta a manipular
- * @callback manejador donde tengo como argumento data y error donde los ire manipulando dependiendo de la situacion
+ * @return promise que devuelve un sring segun ha sdio devuelto con un resolve o un reject
  */
 export function modifyCardToCollection(user: string,  card: Card): Promise<string> {
     return new Promise<string>((resolve, reject) => {
